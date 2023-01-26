@@ -7,8 +7,8 @@
         </div>
         <MapboxMap style="height: 400px; width: 700px"
             access-token="pk.eyJ1Ijoic2sxa29sYSIsImEiOiJjbGQ2cnhreDcxY3FqM29tbTlnZndhY2l1In0.fy9FCbDkCMN0YDrx08F0TQ"
-            map-style="mapbox://styles/mapbox/streets-v11" :center="[route.query.lat, route.query.lon]" :zoom="4"
-            @mb-created="(mapboxInstance) => map = mapboxInstance">
+            map-style="mapbox://styles/mapbox/streets-v11" :center="[weatherData.longitude, weatherData.latitude]"
+            :zoom="9" @mb-created="(mapboxInstance) => map = mapboxInstance">
         </MapboxMap>
 
         <h1 class="text-4xl mb-2">{{ route.params.city }}</h1>
@@ -24,7 +24,7 @@
 
 <script setup>
 import axios from 'axios';
-import { useRouter, useRoute } from 'vue-router';
+import { useRoute } from 'vue-router';
 
 //map
 import { MapboxMap } from '@studiometa/vue-mapbox-gl';
@@ -33,17 +33,13 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 const route = useRoute();
 const getWeatherData = async () => {
     try {
-        //api.openweathermap.org
-        //const weatherData = await axios.get(`https://api.openweathermap.org/data/2.5/onecall?lat=${route.query.lat}&lon=${route.query.lng}&exclude=daily&appid=b36e58192e852ea4b36df4490fff49c3`);
-
         //api.open-meteo.com
         const weatherData = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${route.query.lat}&longitude=${route.query.lon}&current_weather=true`)
+        console.log(weatherData.data)
         return weatherData.data;
     } catch (err) {
         console.log(err)
     }
 };
 const weatherData = await getWeatherData();
-
-const mapboxAPIkey = "pk.eyJ1Ijoic2sxa29sYSIsImEiOiJjbGQ2cnhreDcxY3FqM29tbTlnZndhY2l1In0.fy9FCbDkCMN0YDrx08F0TQ"
 </script>

@@ -24,6 +24,8 @@ import { ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 
+
+
 const router = useRouter();
 const previewCity = (searchResult) => {
     console.log(searchResult);
@@ -42,7 +44,7 @@ const previewCity = (searchResult) => {
     });
 };
 
-const mapboxAPIkey = "pk.eyJ1Ijoic2sxa29sYSIsImEiOiJjbGQ2cnhreDcxY3FqM29tbTlnZndhY2l1In0.fy9FCbDkCMN0YDrx08F0TQ"
+const mapboxAPIkey = import.meta.env.VITE_MAP_BOX_API;
 const searchQuery = ref("");
 const queryTimeout = ref(null);
 const mapboxSeachResults = ref(null);
