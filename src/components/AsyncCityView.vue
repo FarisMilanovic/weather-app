@@ -5,53 +5,45 @@
                 You are currently previewing this city, click the "+" icon to save it.
             </p>
         </div>
-        <div class="flex flex-col items-center text-white py-12">
-            <h1 class="text-4xl mb-2">{{ route.params.city }}</h1>
-            <!-- <p class="text-sm mb-12">
-                {{
-                    new Date(weatherData.currentTime).toLocaleDateString(
-                        "en-us",
-                        {
-                            weekday: 'short',
-                            day: '2-digit',
-                            month: 'long'
-                        }
-                    )
-                }}
-                {{
-    new Date(weatherData.currentTime).toLocaleDateString(
-        "en-us",
-        {
-            timeStyle: 'short',
-        }
-    )
-                }}
-            </p> -->
-            <p class="text-8xl mb-8">
-                {{ Math.round(weatherData.current_weather.temperature) }}&deg;
-            </p>
-            <!-- <p>
-                Feels like
-                {{ Math.round(weatherData?.current.feels_like) }}&deg;
-            </p> -->
-        </div>
+        <MapboxMap style="height: 400px; width: 700px"
+            access-token="pk.eyJ1Ijoic2sxa29sYSIsImEiOiJjbGQ2cnhreDcxY3FqM29tbTlnZndhY2l1In0.fy9FCbDkCMN0YDrx08F0TQ"
+            map-style="mapbox://styles/mapbox/streets-v11" :center="[route.query.lat, route.query.lon]" :zoom="4"
+            @mb-created="(mapboxInstance) => map = mapboxInstance">
+        </MapboxMap>
+
+        <h1 class="text-4xl mb-2">{{ route.params.city }}</h1>
+        <p class="text-8xl mb-8">
+            {{ Math.round(weatherData.current_weather.temperature) }}&deg;
+        </p>
+        <p class="text-2xl mb-8">
+            Wind:
+            {{ Math.round(weatherData.current_weather.windspeed) }} km/h
+        </p>
     </div>
 </template>
 
 <script setup>
 import axios from 'axios';
-import { useRoute } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
+
+//map
+import { MapboxMap } from '@studiometa/vue-mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 const route = useRoute();
 const getWeatherData = async () => {
     try {
-        // const weatherData = await axios.get(`https://api.openweathermap.org/data/2.5/onecall?lat=${route.query.lat}&lon=${route.query.lng}&exclude=daily&appid=b36e58192e852ea4b36df4490fff49c3`);
+        //api.openweathermap.org
+        //const weatherData = await axios.get(`https://api.openweathermap.org/data/2.5/onecall?lat=${route.query.lat}&lon=${route.query.lng}&exclude=daily&appid=b36e58192e852ea4b36df4490fff49c3`);
+
+        //api.open-meteo.com
         const weatherData = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${route.query.lat}&longitude=${route.query.lon}&current_weather=true`)
-        console.log(weatherData)
         return weatherData.data;
     } catch (err) {
         console.log(err)
     }
 };
 const weatherData = await getWeatherData();
+
+const mapboxAPIkey = "pk.eyJ1Ijoic2sxa29sYSIsImEiOiJjbGQ2cnhreDcxY3FqM29tbTlnZndhY2l1In0.fy9FCbDkCMN0YDrx08F0TQ"
 </script>
