@@ -51,25 +51,23 @@
 
 <script setup>
 import { RouterLink, useRoute, useRouter } from 'vue-router';
-import { uid } from 'uid'
 import BaseModal from './BaseModal.vue';
-import { ref } from 'vue';
-
+import { reactive, ref } from 'vue';
+import { uid } from 'uid';
 
 
 //add city to local storage
-const savedCities = ref([]);
+const savedCities = reactive([]);
 const route = useRoute();
 const router = useRouter();
 const addCity = () => {
-    if (localStorage.getItem("savedCities")) {
+    if (localStorage.getItem('savedCities')) {
         savedCities.value = JSON.parse(
-            localStorage.getItem("savedCities")
+            localStorage.getItem('savedCities')
         );
-        console.log(savedCities.value)
-
-
     }
+
+
     const locationObj = {
         id: uid(),
         state: route.params.state,
@@ -79,12 +77,18 @@ const addCity = () => {
             lon: route.query.lon,
         },
     };
-    savedCities.value.push(locationObj);
-    localStorage.setItem('savedCities', JSON.stringify('savedCities.value'))
-    let query = Object.assign({}, route.query)
+    savedCities.push(locationObj);
+    localStorage.setItem(
+        "savedCities",
+        JSON.stringify(savedCities)
+    );
+    let query = Object.assign({}, route.query);
+    query.id = locationObj.id;
     delete query.preview;
-    router.replace({ query })
+    router.replace({ query });
 };
+
+
 
 
 //info button modal
@@ -94,7 +98,3 @@ const toggleModal = () => {
 };
 
 </script>
-
-<style lang="scss" scoped>
-
-</style>

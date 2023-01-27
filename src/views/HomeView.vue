@@ -16,6 +16,15 @@
                 </template>
             </ul>
         </div>
+        <div class="flex flex-col gap-4">
+            <Suspense>
+                <city-list>
+                    <template #fallback>
+                        <p>Loading...</p>
+                    </template>
+                </city-list>
+            </Suspense>
+        </div>
     </main>
 </template>
 
@@ -23,12 +32,12 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import CityList from '../components/CityList.vue';
 
 
-
+//preview a city
 const router = useRouter();
 const previewCity = (searchResult) => {
-    console.log(searchResult);
     const [city, state] = searchResult.place_name.split(",");
     router.push({
         name: "cityView",
@@ -44,12 +53,12 @@ const previewCity = (searchResult) => {
     });
 };
 
+//seach for a city
 const mapboxAPIkey = import.meta.env.VITE_MAP_BOX_API;
 const searchQuery = ref("");
 const queryTimeout = ref(null);
 const mapboxSeachResults = ref(null);
 const searchError = ref(null);
-
 const getSearchResults = () => {
     clearTimeout(queryTimeout.value);
     queryTimeout.value = setTimeout(async () => {
