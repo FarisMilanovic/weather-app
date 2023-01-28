@@ -31,6 +31,11 @@
             map-style="mapbox://styles/mapbox/streets-v11" :center="[weatherData.coord.lon, weatherData.coord.lat]"
             :zoom="8" @mb-created="(mapboxInstance) => map = mapboxInstance">
         </MapboxMap>
+
+        <!-- remove city button -->
+        <!-- <div class="flex items-center gap-2 py-12 text-white cursor-pointer duration-150 hover:text-red-500">
+            <i class="fa-solid fa-trash"></i>
+        </div> -->
     </div>
 
     <!-- api.open-meteo.com -->
@@ -77,6 +82,8 @@ const getWeatherData = async () => {
     }
 
 };
-
 const weatherData = await getWeatherData();
+
+
+
 </script>

@@ -2,6 +2,8 @@
     <div v-for="city in savedCities" :key="city.id">
         <city-card :city="city" @click="goToCityView(city)"></city-card>
     </div>
+
+    <p v-if="savedCities.length === 0">No locations added. To start tracking a location, seach in the field above!</p>
 </template>
 
 <script setup>
@@ -14,6 +16,8 @@ import { useRouter } from 'vue-router';
 
 var savedCities = reactive([]);
 
+
+//check local storage for saved cities and get weather data for each
 const getCities = async () => {
     if (localStorage.getItem('savedCities')) {
         savedCities = JSON.parse(localStorage.getItem('savedCities'));
@@ -50,6 +54,7 @@ const goToCityView = (city) => {
             city: city.city
         },
         query: {
+            id: city.id,
             lat: city.coords.lat,
             lon: city.coords.lon
         }

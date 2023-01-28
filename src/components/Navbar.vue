@@ -7,11 +7,14 @@
                     <i class="text-2xl font-bold">The Local Weather</i>
                 </div>
             </RouterLink>
+            <!-- buttons for info,add and delete -->
             <div class="flex gap-4 flex-1 justify-end">
                 <i @click="toggleModal"
                     class="fa-solid fa-circle-info text-xl hover:text-weather-secondary duration-150 cursor-pointer"></i>
-                <i @click="addCity"
-                    class="fa-solid fa-plus  text-xl hover:text-weather-secondary duration-150 cursor-pointer"></i>
+                <i @click="addCity" v-if="route.query.preview"
+                    class="fa-solid fa-heart text-xl duration-150 hover:text-red-500 cursor-pointer"></i>
+                <i @click="removeCity" v-if="!route.query.preview"
+                    class="fa-solid fa-trash text-xl duration-150 hover:text-red-600 cursor-pointer"></i>
             </div>
             <BaseModal :modalActive="modalActive" @close-modal="toggleModal">
                 <div class="text-black">
@@ -55,11 +58,11 @@ import BaseModal from './BaseModal.vue';
 import { reactive, ref } from 'vue';
 import { uid } from 'uid';
 
+const route = useRoute();
+const router = useRouter();
 
 //add city to local storage
 const savedCities = reactive([]);
-const route = useRoute();
-const router = useRouter();
 const addCity = () => {
     if (localStorage.getItem('savedCities')) {
         savedCities.value = JSON.parse(
@@ -85,10 +88,27 @@ const addCity = () => {
     let query = Object.assign({}, route.query);
     query.id = locationObj.id;
     delete query.preview;
+    query.id = locationObj.id;
     router.replace({ query });
 };
 
 
+//remove city
+const removeCity = () => {
+    const cities = JSON.parse(
+        localStorage.getItem('savedCities')
+    );
+    const updatedCities = cities.filter(
+        (city) => city.id !== route.query.id
+    );
+    localStorage.setItem(
+        "savedCities",
+        JSON.stringify(updatedCities)
+    );
+    router.push({
+        name: 'home',
+    });
+};
 
 
 //info button modal
@@ -96,5 +116,7 @@ const modalActive = ref(null);
 const toggleModal = () => {
     modalActive.value = !modalActive.value;
 };
+
+
 
 </script>
